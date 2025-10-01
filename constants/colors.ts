@@ -1,15 +1,17 @@
 export const colors = {
   light: {
     // Base colors
-    background: '#FFFFFF',
+    background: '#e6c619',
+    backgroundWhite: '#FFFFFF',
     surface: '#F3F4F6',
     card: '#FFFFFF',
     text: '#1F2937',
+    textWhite: '#FFFFFF',
     secondaryText: '#4B5563',
     border: '#E5E7EB',
     
     // UI elements
-    primary: '#059669',
+    primary: '#e6c619',
     primaryLight: '#10B981',
     primaryDark: '#047857',
     accent: '#8B5CF6',
@@ -23,7 +25,7 @@ export const colors = {
   },
   dark: {
     // Base colors
-    background: '#111827',
+    background: '#',
     surface: '#1F2937',
     card: '#374151',
     text: '#F9FAFB',
