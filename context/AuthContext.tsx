@@ -13,6 +13,7 @@ interface User {
   id: number;
   name: string;
   email: string;
+  username: string;
   email_verified_at: string | null;
   company_id: number;
   job_role_id: number;
@@ -20,12 +21,13 @@ interface User {
 }
 
 interface AuthContextType {
-  signIn: (token: string, user: User) => void;
+  signIn: (token: string, user: User, edxinstanceId: string) => void;
   signOut: () => void;
   session?: string | null;
   user?: User | null;
   isLoading: boolean;
   updateUser: (userData: any) => Promise<void>;
+  edxSessionId?: string| null;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -35,6 +37,7 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   isLoading: false,
   updateUser: async () => {},
+  edxSessionId: null
 });
 
 export function useSession() {
@@ -50,6 +53,7 @@ export function useSession() {
 export function SessionProvider({ children }: PropsWithChildren) {
   const [[isLoading, session], setSession] = useStorageState("session");
   const [[, user], setUser] = useStorageState("user");
+  const [[, edxSessionId], setEdxSessionId] = useStorageState("edxSession");
 
   // Add this function to update user data
   const updateUser = async (userData: any) => {
@@ -66,6 +70,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
         });
         setSession(null);
         setUser(null);
+        setEdxSessionId(null);
         router.replace("/sign-in");
       }
     } catch (error) {
@@ -75,16 +80,20 @@ export function SessionProvider({ children }: PropsWithChildren) {
 
   const loadUserInfo = async (token: string) => {
     try {
-      const response = await axiosInstance.get("api/user", {
+      const response = await axiosInstance.get("/api/user", {
         headers: {
-          Authorization: `Bearer ${session}`,
+          Authorization: `Bearer ${token}`,
         },
       });
+       
+
       setUser(JSON.stringify(response.data));
+
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 401) {
         setSession(null);
         setUser(null);
+        setEdxSessionId(null);
         router.replace("/sign-in");
       } else {
         console.error("Error fetching user info:", error);
@@ -93,6 +102,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
   };
 
   useEffect(() => {
+    
     if (session) {
       loadUserInfo(session);
     }
@@ -122,10 +132,12 @@ export function SessionProvider({ children }: PropsWithChildren) {
   };
 
   // Function to Sign in User
-  const handleSiginIn = async (token: string, userData: User) => {
+  const handleSiginIn = async (token: string, userData: User, edxinstanceId: string) => {
     try {
+      console.log(token);
       await setSession(token);
       await setUser(JSON.stringify(userData));
+      await setEdxSessionId(edxinstanceId);
     } catch (e) {
       console.error("Failed to sign in:", e);
       throw e;
@@ -141,6 +153,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
         user: parsedUser,
         isLoading,
         updateUser: handleUpdateUser,
+        edxSessionId
       }}
     >
       {children}

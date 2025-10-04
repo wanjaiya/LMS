@@ -7,7 +7,7 @@ interface ButtonProps {
   className?: string;
   disabled?: boolean;
   loading?: boolean;
-  variant?: "primary" | "secondary" | "danger" | "ghost";
+  variant?: "primary" | "secondary" | "danger" | "ghost" | "white";
   onPress?: () => void;
   children?: React.ReactNode;
 }
@@ -25,7 +25,7 @@ const Button: React.FC<ButtonProps> = ({
     switch (variant) {
       case "primary":
         return {
-          gradient: ["#058669", "#047857"],
+          gradient: ["#e6c619", "#e6c619"],
           textColor: "text-white",
         };
       case "secondary":
@@ -46,6 +46,12 @@ const Button: React.FC<ButtonProps> = ({
           textColor: "text-gray-200",
         };
 
+      case "white":
+        return {
+          gradient: ["#FFFFFF", "#FFFFFF"],
+          textColor: "text-gray-900",
+        };
+
       default:
         return {
           gradient: ["#058669", "#047857"] as [string, string],
@@ -60,7 +66,7 @@ const Button: React.FC<ButtonProps> = ({
     <TouchableOpacity
       onPress={onPress}
       disabled={disabled || loading}
-      className={`overflow-hidden rounded-2xl  ${disabled ? "opacity-50" : ""} ${className}`}
+      className={`overflow-hidden   ${disabled ? "opacity-50" : ""} ${className}`}
       style={{
         elevation: 3,
       }}

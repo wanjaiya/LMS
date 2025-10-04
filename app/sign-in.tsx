@@ -1,4 +1,4 @@
-import { View, Text, Alert } from "react-native";
+import { View, Text, Alert, Image } from "react-native";
 import React, { useState } from "react";
 import Button from "@/components/core/Button";
 import Input from "@/components/core/Input";
@@ -7,6 +7,7 @@ import axiosInstance from "@/config/axiosConfig";
 import axios from "axios";
 import { useTheme } from "@/context/ThemeContext";
 import { useSession } from "@/context/AuthContext";
+// import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 const Signin = () => {
   const { signIn } = useSession();
@@ -20,6 +21,9 @@ const Signin = () => {
     password: "",
   });
   const [loading, setLoading] = useState(false);
+   
+
+
 
   const handleChange = (key: string, value: string) => {
     setData({ ...data, [key]: value });
@@ -31,14 +35,13 @@ const Signin = () => {
     setErrors({ email: "", password: "" });
 
     try {
-      console.log(data);
+
 
       const response = await axiosInstance.post("/api/login", data);
-      console.log(response.data);
+     
 
-      await signIn(response.data.token, response.data.user);
+      await signIn(response.data.token, response.data.user, response.data.edxinstanceId);
       router.replace("/");
-
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const responseData = error.response?.data;
@@ -55,29 +58,37 @@ const Signin = () => {
       setLoading(false);
     }
   };
+   
+
+
 
   return (
     <View
-      className={`flex-1 justify-center items-center p-5 ${currentTheme === "dark" ? "bg-gray-900" : "bg-gray-50"}`}
+      className={`flex-1 p-5 ${currentTheme === "dark" ? "bg-gray-900" : "bg-white"}`}
     >
-      <View className="items-center mb-8">
+      <View className="items-center mt-4">
+        <Image
+          source={require("../assets/images/logo.png")}
+          style={{ height: 145, width: 85 }}
+        />
+      </View>
+      <View className="items-center">
         <Text
-          className={`text-2xl font-bold mt-4 ${currentTheme === "dark" ? "text-white" : "text-gray-900"}`}
+          className={`text-2xl text-center font-bold mt-4 ${currentTheme === "dark" ? "text-white" : "text-gray-900"}`}
         >
-          The AKI Knowledge Hub
+          Welcome to The AKI Knowledge Hub
         </Text>
       </View>
       <Text
-        className={`text-2xl font-bold mt-4 ${currentTheme === "dark" ? "text-white" : "text-gray-900"}`}
+        className={`text-[14px] justify-start  mt-4 mb-4 ${currentTheme === "dark" ? "text-white" : "text-gray-900"}`}
       >
-        Login
+        Sign in to continue
       </Text>
 
       <Input
-        placeholder="Email"
+        placeholder="Email / Username"
         value={data.email}
         onChangeText={(value) => handleChange("email", value)}
-        keyboardType="email-address"
         error={errors.email}
       />
       <Input
@@ -89,15 +100,21 @@ const Signin = () => {
       />
 
       <Button
-        className="w-full bg-primary mb-4"
+        className={`w-full mb-4 `}
         onPress={handleLogin}
         disabled={loading}
         loading={loading}
+        variant="primary"
       >
         <View className="flex-row items-center justify-center">
-          <Text className="text-white text-center text-xl">Signin</Text>
+          <Text className="text-white text-center text-xl">Sign in</Text>
         </View>
       </Button>
+
+      <View className={`flex-1 items-center mt-10 `}>
+        <Text className="mb-4"> Or sign in with</Text>
+       
+      </View>
     </View>
   );
 };

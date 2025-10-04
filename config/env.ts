@@ -1,1 +1,1 @@
-export const API_BASE_URL = 'http://aki-microsite.test'
+export const API_BASE_URL = 'https://academy.akinsure.com'

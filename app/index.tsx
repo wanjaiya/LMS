@@ -21,10 +21,7 @@ const WelcomeScreen = () => {
 
   const image = { uri: "../assets/images/launch_background.jpg" };
   return (
-    <SafeAreaProvider>
-      <SafeAreaView
-        className={`flex-1 ${currentTheme === "dark" ? "bg-gray-900" : "bg-white"}`}
-      >
+      <View className={`flex-1 ${currentTheme === "dark" ? "bg-white" : "bg-white"}`}>
         <Image
           source={require("../assets/images/launch_background.jpg")}
           style={styles.image}
@@ -44,8 +41,7 @@ const WelcomeScreen = () => {
             </Text>
           </TouchableOpacity>
         </View>
-      </SafeAreaView>
-    </SafeAreaProvider>
+      </View>
   );
 };
 
